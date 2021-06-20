@@ -1,6 +1,7 @@
 const DynamoDBModel = require('./dynamodbModel');
+const dynamodb = require('../db/dynamodb');
 
-class User extends DynamoDBModel {
+class UserModel extends DynamoDBModel {
     constructor() {
         super({
             TableName: 'users',
@@ -9,7 +10,7 @@ class User extends DynamoDBModel {
             ],
             GlobalSecondaryIndexes: [
                 {
-                    IndexName: 'email-timetracker-users',
+                    IndexName: 'email-timetracker-users', // {hash_key}-{app-name}-{table_name}
                     KeySchema: [
                         {
                             AttributeName: 'email',
@@ -30,7 +31,7 @@ class User extends DynamoDBModel {
                 { AttributeName: 'email', AttributeType: 'S' },
                 // { AttributeName: 'email_verified', AttributeType: 'N' }, // 0 or 1
                 // { AttributeName: 'fullname', AttributeType: 'S' },
-                // { AttributeName: 'password', AttributeType: 'S' }, // Hashed
+                // { AttributeName: 'password_hash', AttributeType: 'S' }, // Hashed
                 // { AttributeName: 'image_url', AttributeType: 'S' },
                 // { AttributeName: 'timezone', AttributeType: 'S' },
                 // { AttributeName: 'created_at', AttributeType: 'S' },
@@ -42,6 +43,24 @@ class User extends DynamoDBModel {
             },
         });
     }
+
+    async findUserByEmail(email) {
+        const response = await dynamodb.query({
+            ExpressionAttributeValues: {
+                ':v1': {
+                    S: email,
+                }
+            },
+            KeyConditionExpression: 'email = :v1',
+            TableName: 'users'
+        }).promise();
+
+        if (response.Count < 1) {
+            throw new Error('User not found');
+        }
+
+        return this.normalizeQueryItems(response.Items)[0];
+    }
 }
 
-module.exports = new User();
+module.exports = new UserModel();
