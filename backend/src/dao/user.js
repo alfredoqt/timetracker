@@ -29,7 +29,7 @@ class UserModel extends DynamoDBModel {
             AttributeDefinitions: [
                 { AttributeName: 'id', AttributeType: 'S' },
                 { AttributeName: 'email', AttributeType: 'S' },
-                // { AttributeName: 'email_verified', AttributeType: 'N' }, // 0 or 1
+                // { AttributeName: 'email_verified', AttributeType: 'BOOL' }, // 0 or 1
                 // { AttributeName: 'fullname', AttributeType: 'S' },
                 // { AttributeName: 'password_hash', AttributeType: 'S' }, // Hashed
                 // { AttributeName: 'image_url', AttributeType: 'S' },
@@ -51,16 +51,56 @@ class UserModel extends DynamoDBModel {
                     S: email,
                 }
             },
+            IndexName: 'email-timetracker-users',
             KeyConditionExpression: 'email = :v1',
             TableName: 'users'
         }).promise();
 
         if (response.Count < 1) {
-            throw new Error('User not found');
+            return null; // Covers other use cases
         }
 
         return this.normalizeQueryItems(response.Items)[0];
     }
+
+    createUser(email, fullname, password_hash) {
+        return this.createItem({
+            Item: {
+                email: {
+                    S: email,
+                },
+                fullname: {
+                    S: fullname,
+                },
+                password_hash: {
+                    S: password_hash,
+                },
+                email_verified: {
+                    BOOL: false,
+                },
+            },
+            TableName: 'users',
+        });
+    }
+
+    async findUserById(id) {
+        const response = await dynamodb.query({
+            ExpressionAttributeValues: {
+                ':v1': {
+                    S: id,
+                }
+            },
+            KeyConditionExpression: 'id = :v1',
+            TableName: 'users'
+        }).promise();
+
+        if (response.Count < 1) {
+            return null; // Covers other use cases
+        }
+
+        return this.normalizeQueryItems(response.Items)[0];
+    }
+
 }
 
 module.exports = new UserModel();

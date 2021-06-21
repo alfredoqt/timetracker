@@ -5,6 +5,7 @@ const AWS = require('aws-sdk');
 const session = require('./middleware/session');
 const apiErrorHandler = require('./middleware/apiErrorHandler');
 const userModel = require('./dao/user');
+const router = require('./routes');
 
 function setupServer() {
     // Must run before any AWS operation
@@ -24,6 +25,9 @@ function setupServer() {
 
     // Session middleware
     app.use(session);
+
+    // API
+    app.use('/api', router);
 
     // API error middleware
     app.use(apiErrorHandler);

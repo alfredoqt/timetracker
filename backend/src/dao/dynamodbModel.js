@@ -1,4 +1,5 @@
 const dynamodb = require('../db/dynamodb');
+const { v4: uuidv4 } = require('uuid');
 
 // Abstract class
 class DynamoDBModel {
@@ -19,6 +20,25 @@ class DynamoDBModel {
             }
             return normalizedItem;
         });
+    }
+
+    async createItem(params) {
+        const createdAt = new Date(Date.now()).toISOString();
+        const id = uuidv4();
+        const data = {
+            Item: {
+                ...params.Item,
+                id,
+                created_at: {
+                    S: createdAt,
+                },
+                updated_at: {
+                    S: createdAt,
+                },
+            },
+        };
+        await dynamodb.putItem(data).promise();
+        return id;
     }
 }
 
