@@ -1,22 +1,12 @@
-require('dotenv').config();
+require('./config').serverConfig();
 
 const express = require('express');
-const AWS = require('aws-sdk');
 const session = require('./middleware/session');
 const apiErrorHandler = require('./middleware/apiErrorHandler');
 const userModel = require('./dao/user');
 const router = require('./routes');
 
 function setupServer() {
-    // Must run before any AWS operation
-    AWS.config.update({
-        region: 'us-east-1',
-        credentials: {
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-        }
-    });
-
     const app = express();
     app.use(express.json());
 

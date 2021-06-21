@@ -26,9 +26,12 @@ class DynamoDBModel {
         const createdAt = new Date(Date.now()).toISOString();
         const id = uuidv4();
         const data = {
+            ...params,
             Item: {
                 ...params.Item,
-                id,
+                id: {
+                    S: id,
+                },
                 created_at: {
                     S: createdAt,
                 },

@@ -22,6 +22,7 @@ async function login(email, password) {
             return Promise.reject(new APIError(400, 'Wrong email or password'));
         }
     } catch (err) {
+        console.error(err);
         return Promise.reject(new APIError(500, 'Internal server error'));
     }
 }
@@ -43,6 +44,7 @@ async function register(email, fullname, password) {
         const id = await userModel.createUser(email, fullname, passwordHash);
         return { id };
     } catch (err) {
+        console.error(err);
         return Promise.reject(new APIError(500, 'Internal server error'));
     }
 }
