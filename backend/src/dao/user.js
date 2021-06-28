@@ -34,6 +34,7 @@ class UserModel extends DynamoDBModel {
                 // { AttributeName: 'password_hash', AttributeType: 'S' }, // Hashed
                 // { AttributeName: 'image_url', AttributeType: 'S' },
                 // { AttributeName: 'timezone', AttributeType: 'S' },
+                // { AttributeName: 'default_workspace_id', AttributeType: 'S' },
                 // { AttributeName: 'created_at', AttributeType: 'S' },
                 // { AttributeName: 'updated_at', AttributeType: 'S' },
             ],
@@ -64,6 +65,7 @@ class UserModel extends DynamoDBModel {
     }
 
     createUser(email, fullname, password_hash) {
+        // TODO: Create a default workspace to wrap everything
         return this.createItem({
             Item: {
                 email: {
