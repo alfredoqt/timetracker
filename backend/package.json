@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon src/index.js"
+        "dev": "nodemon src/index.js",
+        "knex": "knex"
     },
     "keywords": [],
     "author": "",
@@ -17,6 +18,8 @@
         "express": "^4.17.1",
         "express-session": "^1.17.2",
         "express-validator": "^6.12.0",
+        "knex": "^0.95.6",
+        "pg": "^8.6.0",
         "redis": "^3.1.2",
         "uuid": "^8.3.2"
     },

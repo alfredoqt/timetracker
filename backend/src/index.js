@@ -3,8 +3,6 @@ require('./config').serverConfig();
 const express = require('express');
 const session = require('./middleware/session');
 const apiErrorHandler = require('./middleware/apiErrorHandler');
-const userModel = require('./dao/user');
-const workspaceModel = require('./dao/workspace');
 const router = require('./routes');
 
 function setupServer() {
@@ -26,11 +24,4 @@ function setupServer() {
     app.listen(4001, () => console.log('server is running on port 4001'));
 }
 
-(async function () {
-    // Attempt to create tables
-    await Promise.allSettled([
-        userModel.createTable().promise(),
-        workspaceModel.createTable().promise(),
-    ]);
-    setupServer();
-})();
+setupServer();
