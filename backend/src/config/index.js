@@ -1,11 +1,6 @@
-const dotenv = require('dotenv');
-const AWS = require('aws-sdk');
-
-// Required before running the server
-function serverConfig() {
-    dotenv.config();
-}
+require('dotenv').config();
 
 module.exports = {
-    serverConfig,
+    env: process.env.NODE_ENV,
+    port: process.env.PORT,
 };

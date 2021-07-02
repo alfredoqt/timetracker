@@ -1,4 +1,4 @@
-require('./config').serverConfig();
+const appConfig = require('./config');
 
 const express = require('express');
 const session = require('./middleware/session');
@@ -21,7 +21,10 @@ function setupServer() {
     // API error middleware
     app.use(apiErrorHandler);
 
-    app.listen(4001, () => console.log('server is running on port 4001'));
+    app.listen(
+        appConfig.port,
+        () => console.log(`server is running on port ${appConfig.port}`),
+    );
 }
 
 setupServer();

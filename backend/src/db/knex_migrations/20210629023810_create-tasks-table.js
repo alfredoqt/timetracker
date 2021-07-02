@@ -9,7 +9,8 @@ exports.up = function (knex) {
         table.foreign('project_id').references('projects.id');
         table.foreign('assignee_id').references('users.id');
         table.integer('tracked_seconds').notNullable().defaultTo(0);
-        table.timestamps();
+        table.datetime('created_at', { useTz: false });
+        table.datetime('updated_at', { useTz: false });
     });
 };
 

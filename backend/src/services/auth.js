@@ -1,4 +1,6 @@
 const userModel = require('../dao/user');
+const workspaceModel = require('../dao/workspace');
+const workspaceUserModel = require('../dao/workspaceUser');
 const bcrypt = require('bcrypt');
 const APIError = require('../errors/apiError');
 
@@ -35,14 +37,27 @@ async function register(email, fullname, password) {
             return Promise.reject(new APIError(400, 'User already exists'));
         }
 
+        // Create workspace
+        const newWorkspaceId = await workspaceModel.createWorkspace(`${fullname}'s workspace`);
         // Hash password
         const passwordHash = await bcrypt.hash(
             password,
             Number.parseInt(process.env.SALT_ROUNDS, 10),
         );
 
-        const id = await userModel.createUser(email, fullname, passwordHash);
-        return { id };
+        const newUserId = await userModel.createUser(
+            email,
+            fullname,
+            passwordHash,
+            newWorkspaceId,
+        );
+
+        await workspaceUserModel.createWorkspaceUser(
+            newUserId,
+            newWorkspaceId,
+        );
+
+        return { id: newUserId };
     } catch (err) {
         console.error(err);
         return Promise.reject(new APIError(500, 'Internal server error'));

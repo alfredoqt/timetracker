@@ -9,7 +9,8 @@ exports.up = function (knex) {
         table.string('timezone');
         table.integer('default_workspace_id').notNullable();
         table.foreign('default_workspace_id').references('workspaces.id');
-        table.timestamps();
+        table.datetime('created_at', { useTz: false });
+        table.datetime('updated_at', { useTz: false });
         table.index(['email'], 'email-timetracker-users');
     });
 };

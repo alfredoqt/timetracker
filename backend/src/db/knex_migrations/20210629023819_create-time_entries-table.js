@@ -14,8 +14,9 @@ exports.up = function (knex) {
         table.foreign('workspace_id').references('workspaces.id');
         table.foreign('project_id').references('projects.id');
         table.foreign('task_id').references('tasks.id');
-        table.timestamps();
-        table.index(['workspace_id', 'user_id', 'created_at'], 'user_main_workspace_view-timetracker-time_entries');
+        table.datetime('created_at', { useTz: false });
+        table.datetime('updated_at', { useTz: false });
+        table.index(['workspace_id', 'user_id', 'start'], 'user_main_workspace_view-timetracker-time_entries');
     });
 };
 

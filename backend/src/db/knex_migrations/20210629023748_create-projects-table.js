@@ -7,7 +7,8 @@ exports.up = function (knex) {
         table.integer('workspace_id').notNullable();
         table.foreign('client_id').references('clients.id');
         table.foreign('workspace_id').references('workspaces.id');
-        table.timestamps();
+        table.datetime('created_at', { useTz: false });
+        table.datetime('updated_at', { useTz: false });
     });
 };
 

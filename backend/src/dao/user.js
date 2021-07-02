@@ -9,13 +9,14 @@ class UserModel {
             .first();
     }
 
-    async createUser(email, fullname, password_hash) {
+    async createUser(email, fullname, password_hash, default_workspace_id) {
         const inserted = await knex('users')
             .returning('id')
             .insert({
                 email,
                 fullname,
                 password_hash,
+                default_workspace_id,
             });
         return inserted[0];
     }

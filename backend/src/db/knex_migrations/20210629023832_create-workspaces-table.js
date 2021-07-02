@@ -4,7 +4,8 @@ exports.up = function (knex) {
         table.increments();
         table.string('logo_url');
         table.string('name').notNullable();
-        table.timestamps();
+        table.datetime('created_at', { useTz: false });
+        table.datetime('updated_at', { useTz: false });
     });
 };
 
