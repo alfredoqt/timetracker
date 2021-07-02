@@ -9,7 +9,9 @@ async function getMe(id) {
             return Promise.reject(new APIError(400, 'User does not exist'));
         }
 
-        return user;
+        // Don't return password_hash
+        const { password_hash, ...rest } = user;
+        return rest;
     } catch (err) {
         console.error(err);
         return Promise.reject(new APIError(500, 'Internal server error'));

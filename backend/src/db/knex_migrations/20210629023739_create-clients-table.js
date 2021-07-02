@@ -1,9 +1,10 @@
 
 exports.up = function (knex) {
-    knex.schema.createTable('clients', function (table) {
+    return knex.schema.createTable('clients', function (table) {
         table.increments();
         table.string('name').notNullable();
-        table.string('workspace_id').references('workspaces.id').notNullable();
+        table.integer('workspace_id').notNullable();
+        table.foreign('workspace_id').references('workspaces.id');
         table.timestamps();
     });
 };

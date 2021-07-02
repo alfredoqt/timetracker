@@ -1,13 +1,14 @@
 
 exports.up = function (knex) {
-    knex.schema.createTable('users', function (table) {
+    return knex.schema.createTable('users', function (table) {
         table.increments();
         table.string('fullname');
         table.string('email');
         table.string('password_hash');
         table.string('image_url');
         table.string('timezone');
-        table.foreign('default_workspace_id').references('workspaces.id').notNullable();
+        table.integer('default_workspace_id').notNullable();
+        table.foreign('default_workspace_id').references('workspaces.id');
         table.timestamps();
         table.index(['email'], 'email-timetracker-users');
     });

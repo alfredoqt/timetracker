@@ -1,3 +1,4 @@
+require('dotenv').config(); // Required for isolated migration script
 const path = require('path');
 
 module.exports = {
