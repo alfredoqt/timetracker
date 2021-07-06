@@ -3,7 +3,8 @@ const router = express.Router();
 const authController = require('../controllers/auth');
 const profileController = require('../controllers/profile');
 const timeEntriesController = require('../controllers/timeEntries');
-const { body } = require('express-validator');
+const clientsController = require('../controllers/clients');
+const { body, param } = require('express-validator');
 const authenticate = require('../middleware/authenticate');
 
 router.post(
@@ -30,6 +31,21 @@ router.post(
     body('tag_ids').isArray().optional(),
     body('workspace_id').isInt({ min: 1 }).toInt(),
     timeEntriesController.post,
+);
+router.post(
+    '/clients',
+    authenticate,
+    body('name').notEmpty().trim().optional(),
+    body('workspace_id').isInt({ min: 1 }).toInt(),
+    clientsController.post,
+);
+
+router.put(
+    '/clients/:id',
+    authenticate,
+    param('id').isInt({ min: 1 }).toInt(),
+    body('name').notEmpty().trim(),
+    clientsController.put,
 );
 
 module.exports = router;
