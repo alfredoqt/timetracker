@@ -4,7 +4,7 @@ const authController = require('../controllers/auth');
 const profileController = require('../controllers/profile');
 const timeEntriesController = require('../controllers/timeEntries');
 const clientsController = require('../controllers/clients');
-const { body, param } = require('express-validator');
+const { body, param, query } = require('express-validator');
 const authenticate = require('../middleware/authenticate');
 
 router.post(
@@ -22,7 +22,7 @@ router.post(
 );
 router.get('/me', authenticate, profileController.getMe);
 router.post(
-    '/time-entries',
+    '/time-entries', // TODO: Will change to /workspaces/:id/time-entries
     authenticate,
     body('start_ms').isInt({ min: 0 }).toInt(),
     body('description').notEmpty().trim().optional(),
@@ -32,6 +32,14 @@ router.post(
     body('workspace_id').isInt({ min: 1 }).toInt(),
     timeEntriesController.post,
 );
+router.get(
+    '/workspaces/:workspace_id/time-entries',
+    authenticate,
+    query('limit').isInt({ min: 1, max: 10 }).toInt(),
+    query('next_cursor').isBase64().optional(),
+    param('workspace_id').isInt({ min: 1 }).toInt(),
+    timeEntriesController.get,
+);
 router.post(
     '/clients',
     authenticate,
@@ -39,7 +47,6 @@ router.post(
     body('workspace_id').isInt({ min: 1 }).toInt(),
     clientsController.post,
 );
-
 router.put(
     '/clients/:id',
     authenticate,

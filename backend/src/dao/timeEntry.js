@@ -25,6 +25,32 @@ class TimeEntryModel {
         return inserted[0];
     }
 
+    async getByUserAndWorskpace(
+        user_id,
+        workspace_id,
+        limit,
+        next_cursor,
+    ) {
+        const data = await knex('time_entries')
+            .where('user_id', user_id)
+            .andWhere('workspace_id', workspace_id)
+            .andWhere('start', '<', next_cursor)
+            .select('*')
+            .orderBy('start', 'desc')
+            .limit(limit + 1);
+
+        let newNextCursor = null;
+
+        if (data.length === limit + 1) {
+            newNextCursor = data[limit].start;
+        }
+
+        return {
+            data: data.slice(0, limit),
+            next_cursor: newNextCursor,
+        };
+    }
+
 }
 
 module.exports = new TimeEntryModel();
